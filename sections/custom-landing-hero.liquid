@@ -1,6 +1,5 @@
 {% liquid
   assign feature_items = section.blocks | where: 'type', 'feature_item'
-  assign thumbnail_images = section.blocks | where: 'type', 'thumbnail_image'
   assign trust_icons = section.blocks | where: 'type', 'trust_icon'
 %}
 
@@ -68,15 +67,17 @@
     <div class="landing-hero__product-grid">
 
       <div class="landing-hero__features-column">
-        {% if section.settings.product_name != blank %}
-          <h2 class="landing-hero__product-name">{{ section.settings.product_name }}</h2>
-        {% endif %}
+        <div class="landing-hero__title-row">
+          {% if section.settings.badge_image != blank %}
+            <div class="landing-hero__badge-wrapper">
+              {{ section.settings.badge_image | image_url: width: 200 | image_tag: class: 'landing-hero__badge-img' }}
+            </div>
+          {% endif %}
 
-        {% if section.settings.badge_image != blank %}
-          <div class="landing-hero__badge-wrapper">
-            {{ section.settings.badge_image | image_url: width: 200 | image_tag: class: 'landing-hero__badge-img' }}
-          </div>
-        {% endif %}
+          {% if section.settings.product_name != blank %}
+            <h2 class="landing-hero__product-name">{{ section.settings.product_name }}</h2>
+          {% endif %}
+        </div>
 
         {% if section.settings.tagline != blank %}
           <div class="landing-hero__tagline">{{ section.settings.tagline }}</div>
@@ -109,19 +110,18 @@
         {% endif %}
       </div>
 
-      <div class="landing-hero__thumbnails-column">
-        {% if thumbnail_images.size > 0 %}
-          <div class="landing-hero__thumbnails">
-            {% for block in thumbnail_images %}
-              <div class="landing-hero__thumbnail" {{ block.shopify_attributes }}>
-                {% if block.settings.image != blank %}
-                  {{ block.settings.image | image_url: width: 200 | image_tag: class: 'landing-hero__thumbnail-img' }}
-                {% else %}
-                  {{ 'product-1' | placeholder_svg_tag: 'landing-hero__thumbnail-placeholder' }}
-                {% endif %}
-              </div>
-            {% endfor %}
-          </div>
+      <div class="landing-hero__features-image-column">
+        {% if section.settings.features_image != blank %}
+          {{ section.settings.features_image
+            | image_url: width: 400
+            | image_tag:
+              widths: '200, 300, 400',
+              sizes: '(min-width: 990px) 20vw, 100vw',
+              loading: 'lazy',
+              class: 'landing-hero__features-image'
+          }}
+        {% else %}
+          {{ 'product-1' | placeholder_svg_tag: 'landing-hero__features-image-placeholder' }}
         {% endif %}
       </div>
 
@@ -133,7 +133,7 @@
 
       <div class="landing-hero__price-column">
         {% if section.settings.sale_text != blank %}
-          <div class="landing-hero__sale-text">{{ section.settings.sale_text }}</div>
+          <div class="landing-hero__sale-text">{{ section.settings.sale_text | newline_to_br }}</div>
         {% endif %}
 
         <div class="landing-hero__prices">
@@ -192,13 +192,13 @@
   .landing-hero__hero-section {
     position: relative;
     text-align: center;
-    padding: 80px 20px;
+    padding: 80px 0;
     margin-bottom: 80px;
   }
 
   @media screen and (min-width: 750px) {
     .landing-hero__hero-section {
-      padding: 100px 40px;
+      padding: 100px 0;
     }
   }
 
@@ -209,6 +209,8 @@
     right: 0;
     bottom: 0;
     z-index: 0;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
   }
 
   .landing-hero__hero-bg-img {
@@ -247,12 +249,14 @@
   .landing-hero__discount {
     font-size: 1.0625rem;
     line-height: 1.5;
-    color: #d97706;
+    color: rgb(var(--color-foreground-rgb));
   }
 
-  .landing-hero__discount strong,
-  .landing-hero__discount b {
-    color: #c2410c;
+  .landing-hero__discount em,
+  .landing-hero__discount i {
+    color: #c9a26a;
+    font-style: normal;
+    font-weight: 600;
   }
 
   .landing-hero__button {
@@ -389,17 +393,39 @@
   .landing-hero__features-column {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 20px;
+  }
+
+  .landing-hero__title-row {
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    text-align: center;
+    gap: 16px;
   }
 
   @media screen and (min-width: 990px) {
-    .landing-hero__features-column {
-      align-items: flex-start;
-      text-align: left;
+    .landing-hero__title-row {
+      flex-direction: row;
+      align-items: center;
       gap: 20px;
     }
+  }
+
+  .landing-hero__badge-wrapper {
+    width: 100px;
+    flex-shrink: 0;
+  }
+
+  @media screen and (min-width: 990px) {
+    .landing-hero__badge-wrapper {
+      width: 110px;
+    }
+  }
+
+  .landing-hero__badge-img {
+    width: 100%;
+    height: auto;
+    display: block;
   }
 
   .landing-hero__product-name {
@@ -410,58 +436,44 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
     line-height: 1;
+    text-align: center;
   }
 
   @media screen and (min-width: 990px) {
     .landing-hero__product-name {
       font-size: 2.75rem;
+      text-align: left;
     }
-  }
-
-  .landing-hero__badge-wrapper {
-    width: 100px;
-    margin: 8px 0;
-  }
-
-  @media screen and (min-width: 990px) {
-    .landing-hero__badge-wrapper {
-      width: 120px;
-      margin: 0;
-    }
-  }
-
-  .landing-hero__badge-img {
-    width: 100%;
-    height: auto;
-    display: block;
   }
 
   .landing-hero__tagline {
     font-size: 1rem;
     line-height: 1.6;
     margin-top: 4px;
+    text-align: center;
   }
 
   @media screen and (min-width: 990px) {
     .landing-hero__tagline {
       font-size: 1.0625rem;
+      text-align: left;
     }
   }
 
   .landing-hero__features-list {
     list-style: none;
     padding: 0;
-    margin: 12px 0 0 0;
+    margin: 12px auto 0;
     display: flex;
     flex-direction: column;
     gap: 14px;
-    width: 100%;
+    max-width: 100%;
     text-align: left;
   }
 
   @media screen and (min-width: 990px) {
     .landing-hero__features-list {
-      margin-top: 16px;
+      margin: 16px 0 0 0;
       gap: 16px;
     }
   }
@@ -520,43 +532,22 @@
     max-width: 600px;
   }
 
-  .landing-hero__thumbnails-column {
+  .landing-hero__features-image-column {
     display: none;
   }
 
   @media screen and (min-width: 990px) {
-    .landing-hero__thumbnails-column {
+    .landing-hero__features-image-column {
       display: block;
     }
   }
 
-  .landing-hero__thumbnails {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .landing-hero__thumbnail {
-    border: 1px solid rgb(var(--color-border-rgb) / 0.3);
-    border-radius: 6px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    background: rgb(var(--color-background-rgb));
-  }
-
-  .landing-hero__thumbnail:hover {
-    border-color: #c9a26a;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-
-  .landing-hero__thumbnail-img,
-  .landing-hero__thumbnail-placeholder {
+  .landing-hero__features-image,
+  .landing-hero__features-image-placeholder {
     width: 100%;
     height: auto;
     display: block;
-    aspect-ratio: 1;
-    object-fit: cover;
+    max-width: 300px;
   }
 
   .landing-hero__pricing-section {
@@ -764,10 +755,11 @@
       "default": "AWESOME!"
     },
     {
-      "type": "text",
+      "type": "inline_richtext",
       "id": "discount_text",
       "label": "Discount Text",
-      "default": "Your discount of $67 off has been automatically applied."
+      "info": "Use italic or bold to color the discount amount gold",
+      "default": "Your discount of <em>$67 off</em> has been automatically applied."
     },
     {
       "type": "text",
@@ -837,6 +829,11 @@
       "label": "Main Product Image"
     },
     {
+      "type": "image_picker",
+      "id": "features_image",
+      "label": "Features Showcase Image (Tall/Vertical)"
+    },
+    {
       "type": "header",
       "content": "Pricing Section"
     },
@@ -844,7 +841,7 @@
       "type": "text",
       "id": "sale_text",
       "label": "Sale Text",
-      "default": "Limited Time VALENTINE'S DAY sale"
+      "default": "Limited Time\nVALENTINE'S DAY sale"
     },
     {
       "type": "text",
@@ -940,17 +937,6 @@
       ]
     },
     {
-      "type": "thumbnail_image",
-      "name": "Thumbnail Image",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Thumbnail Image"
-        }
-      ]
-    },
-    {
       "type": "trust_icon",
       "name": "Trust Icon",
       "settings": [
@@ -1014,24 +1000,6 @@
           "settings": {
             "text": "Easy-snap magnetic attachments"
           }
-        },
-        {
-          "type": "thumbnail_image"
-        },
-        {
-          "type": "thumbnail_image"
-        },
-        {
-          "type": "thumbnail_image"
-        },
-        {
-          "type": "thumbnail_image"
-        },
-        {
-          "type": "thumbnail_image"
-        },
-        {
-          "type": "thumbnail_image"
         },
         {
           "type": "trust_icon",
