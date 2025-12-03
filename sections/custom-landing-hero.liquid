@@ -484,7 +484,7 @@
     .landing-hero__product-grid {
       grid-template-columns: 1fr 1.6fr 0.75fr;
       gap: 50px;
-      align-items: stretch;
+      align-items: start;
     }
   }
 
@@ -617,8 +617,7 @@
 
   @media screen and (min-width: 990px) {
     .landing-hero__image-column {
-      display: flex;
-      align-self: stretch;
+      display: block;
     }
   }
 
@@ -627,14 +626,6 @@
     width: 100%;
     height: auto;
     max-width: 600px;
-  }
-
-  @media screen and (min-width: 990px) {
-    .landing-hero__main-image {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
   }
 
   .landing-hero__features-image-column {
@@ -661,6 +652,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      max-width: none;
     }
   }
 
