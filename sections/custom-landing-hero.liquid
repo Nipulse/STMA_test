@@ -320,9 +320,16 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
+    gap: 12px;
     padding-left: 24px;
     padding-right: 24px;
+    font-size: 1.0625rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-hero__button--paypal {
+      font-size: 1.125rem;
+    }
   }
 
   .landing-hero__button--paypal:hover {
@@ -330,25 +337,32 @@
   }
 
   .landing-hero__paypal-logo {
-    height: 20px;
+    height: 24px;
     width: auto;
     display: block;
   }
 
+  @media screen and (min-width: 750px) {
+    .landing-hero__paypal-logo {
+      height: 28px;
+    }
+  }
+
   .landing-hero__afterpay {
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     color: rgb(var(--color-foreground-rgb) / 0.7);
     line-height: 1.4;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     justify-content: center;
   }
 
   @media screen and (min-width: 750px) {
     .landing-hero__afterpay {
-      font-size: 0.8125rem;
+      font-size: 1rem;
+      gap: 10px;
     }
   }
 
@@ -367,9 +381,15 @@
   }
 
   .landing-hero__afterpay-logo {
-    height: 16px;
+    height: 24px;
     width: auto;
     vertical-align: middle;
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-hero__afterpay-logo {
+      height: 28px;
+    }
   }
 
   .landing-hero__divider {
@@ -924,10 +944,10 @@
       "content": "Pricing Section"
     },
     {
-      "type": "inline_richtext",
+      "type": "richtext",
       "id": "sale_text",
       "label": "Sale Text",
-      "default": "Limited Time <strong>VALENTINE'S DAY</strong> sale"
+      "default": "<p>Limited Time<br><strong>VALENTINE'S DAY</strong> sale</p>"
     },
     {
       "type": "text",
