@@ -162,7 +162,7 @@
         "tagline": "<p>Say <strong>goodbye to frizz</strong> with the <strong>advanced</strong> SRI DryQ</p>",
         "main_image": "shopify://shop_images/Mask_group_1.png",
         "features_image": "shopify://shop_images/Mask_group.png",
-        "sale_text": "Limited Time VALENTINE'S DAY sale",
+        "sale_text": "<p>Limited Time </p><p><strong>VALENTINE'S DAY</strong> sale</p>",
         "original_price": "$299.99",
         "current_price": "$232.99",
         "cta_button_label": "Order Now",
