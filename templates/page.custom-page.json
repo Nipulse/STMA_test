@@ -96,30 +96,6 @@
             "text": "Easy-snap magnetic attachments"
           }
         },
-        "thumbnail_image_WtAeth": {
-          "type": "thumbnail_image",
-          "settings": {}
-        },
-        "thumbnail_image_eGXVGQ": {
-          "type": "thumbnail_image",
-          "settings": {}
-        },
-        "thumbnail_image_M3UKMQ": {
-          "type": "thumbnail_image",
-          "settings": {}
-        },
-        "thumbnail_image_3dFPHt": {
-          "type": "thumbnail_image",
-          "settings": {}
-        },
-        "thumbnail_image_MfYKqC": {
-          "type": "thumbnail_image",
-          "settings": {}
-        },
-        "thumbnail_image_KBpp6h": {
-          "type": "thumbnail_image",
-          "settings": {}
-        },
         "trust_icon_DtPN3q": {
           "type": "trust_icon",
           "settings": {
@@ -163,12 +139,6 @@
         "feature_item_r9YCNc",
         "feature_item_9bkJ86",
         "feature_item_XqxP3B",
-        "thumbnail_image_WtAeth",
-        "thumbnail_image_eGXVGQ",
-        "thumbnail_image_M3UKMQ",
-        "thumbnail_image_3dFPHt",
-        "thumbnail_image_MfYKqC",
-        "thumbnail_image_KBpp6h",
         "trust_icon_DtPN3q",
         "trust_icon_kb3UwF",
         "trust_icon_EiQ3pj",
@@ -179,7 +149,7 @@
       "settings": {
         "background_image": "shopify://shop_images/image_1.png",
         "heading": "AWESOME!",
-        "discount_text": "Your discount of $67 off has been automatically applied.",
+        "discount_text": "<em>Your discount of $67 off</em> has been automatically applied.",
         "button_label": "Order Now",
         "button_link": "",
         "paypal_button_label": "Pay with PayPal",
@@ -190,6 +160,8 @@
         "product_name": "SRI DRYQ",
         "badge_image": "shopify://shop_images/voted_1.png",
         "tagline": "<p>Say <strong>goodbye to frizz</strong> with the <strong>advanced</strong> SRI DryQ</p>",
+        "main_image": "shopify://shop_images/Mask_group_1.png",
+        "features_image": "shopify://shop_images/Mask_group.png",
         "sale_text": "Limited Time VALENTINE'S DAY sale",
         "original_price": "$299.99",
         "current_price": "$232.99",
