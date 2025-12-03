@@ -48,6 +48,7 @@
         "heading",
         "page-content"
       ],
+      "disabled": true,
       "settings": {
         "content_direction": "column",
         "gap": 32,
@@ -55,9 +56,155 @@
         "padding-block-start": 40,
         "padding-block-end": 80
       }
+    },
+    "custom_landing_hero_eiJitp": {
+      "type": "custom-landing-hero",
+      "blocks": {
+        "feature_item_mJkziK": {
+          "type": "feature_item",
+          "settings": {
+            "text": "Intelligent heat control dries hair faster with optimal airflow speeds"
+          }
+        },
+        "feature_item_VtNynz": {
+          "type": "feature_item",
+          "settings": {
+            "text": "Negative ions to support frizz-free styling"
+          }
+        },
+        "feature_item_zyPjN9": {
+          "type": "feature_item",
+          "settings": {
+            "text": "Infrared light therapy strengthens weak, brittle hair and stimulates growth"
+          }
+        },
+        "feature_item_r9YCNc": {
+          "type": "feature_item",
+          "settings": {
+            "text": "Features 4 modes, 3 speed settings, and a memory function"
+          }
+        },
+        "feature_item_9bkJ86": {
+          "type": "feature_item",
+          "settings": {
+            "text": "Lightweight, compact, and quiet, making it easy to take anywhere"
+          }
+        },
+        "feature_item_XqxP3B": {
+          "type": "feature_item",
+          "settings": {
+            "text": "Easy-snap magnetic attachments"
+          }
+        },
+        "thumbnail_image_WtAeth": {
+          "type": "thumbnail_image",
+          "settings": {}
+        },
+        "thumbnail_image_eGXVGQ": {
+          "type": "thumbnail_image",
+          "settings": {}
+        },
+        "thumbnail_image_M3UKMQ": {
+          "type": "thumbnail_image",
+          "settings": {}
+        },
+        "thumbnail_image_3dFPHt": {
+          "type": "thumbnail_image",
+          "settings": {}
+        },
+        "thumbnail_image_MfYKqC": {
+          "type": "thumbnail_image",
+          "settings": {}
+        },
+        "thumbnail_image_KBpp6h": {
+          "type": "thumbnail_image",
+          "settings": {}
+        },
+        "trust_icon_DtPN3q": {
+          "type": "trust_icon",
+          "settings": {
+            "icon": "orders",
+            "text": "Fulfilled by Amazon"
+          }
+        },
+        "trust_icon_kb3UwF": {
+          "type": "trust_icon",
+          "settings": {
+            "icon": "discount",
+            "text": "Try it for 60 days—money-back guarantee"
+          }
+        },
+        "trust_icon_EiQ3pj": {
+          "type": "trust_icon",
+          "settings": {
+            "icon": "checkmark",
+            "text": "1-year Warranty"
+          }
+        },
+        "trust_icon_6xQBGm": {
+          "type": "trust_icon",
+          "settings": {
+            "icon": "checkmark",
+            "text": "Free Shipping"
+          }
+        },
+        "trust_icon_HkJCWa": {
+          "type": "trust_icon",
+          "settings": {
+            "icon": "checkmark",
+            "text": "Secure Checkout"
+          }
+        }
+      },
+      "block_order": [
+        "feature_item_mJkziK",
+        "feature_item_VtNynz",
+        "feature_item_zyPjN9",
+        "feature_item_r9YCNc",
+        "feature_item_9bkJ86",
+        "feature_item_XqxP3B",
+        "thumbnail_image_WtAeth",
+        "thumbnail_image_eGXVGQ",
+        "thumbnail_image_M3UKMQ",
+        "thumbnail_image_3dFPHt",
+        "thumbnail_image_MfYKqC",
+        "thumbnail_image_KBpp6h",
+        "trust_icon_DtPN3q",
+        "trust_icon_kb3UwF",
+        "trust_icon_EiQ3pj",
+        "trust_icon_6xQBGm",
+        "trust_icon_HkJCWa"
+      ],
+      "name": "Landing Hero",
+      "settings": {
+        "background_image": "shopify://shop_images/image_1.png",
+        "heading": "AWESOME!",
+        "discount_text": "Your discount of $67 off has been automatically applied.",
+        "button_label": "Order Now",
+        "button_link": "",
+        "paypal_button_label": "Pay with PayPal",
+        "paypal_button_link": "",
+        "afterpay_text": "or 4 interest-free payments of $37.50 with Afterpay",
+        "countdown_text": "Valentine's Day Sale Ends at 12PM Feb 14th 2026",
+        "countdown_end": "2026-02-14 12:00:00",
+        "product_name": "SRI DRYQ",
+        "badge_image": "shopify://shop_images/voted_1.png",
+        "tagline": "<p>Say <strong>goodbye to frizz</strong> with the <strong>advanced</strong> SRI DryQ</p>",
+        "sale_text": "Limited Time VALENTINE'S DAY sale",
+        "original_price": "$299.99",
+        "current_price": "$232.99",
+        "cta_button_label": "Order Now",
+        "cta_button_link": "",
+        "social_proof_text": "Over 100,000 sold",
+        "section_width": "page-width",
+        "color_scheme": "",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "custom_landing_hero_eiJitp"
   ]
 }
