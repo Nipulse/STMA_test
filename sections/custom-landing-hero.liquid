@@ -1,0 +1,909 @@
+{% liquid
+  assign trust_badges = section.blocks | where: 'type', 'trust_badge'
+  assign feature_items = section.blocks | where: 'type', 'feature_item'
+  assign customer_images = section.blocks | where: 'type', 'customer_image'
+  assign payment_icons = section.blocks | where: 'type', 'payment_icon'
+%}
+
+<div
+  class="landing-hero section section--{{ section.settings.section_width }} color-{{ section.settings.color_scheme }} spacing-style"
+  style="{% render 'spacing-style', settings: section.settings %}"
+  data-section-id="{{ section.id }}"
+>
+  <div class="landing-hero__container">
+
+    <div class="landing-hero__main">
+
+      <div class="landing-hero__content">
+
+        {% if section.settings.heading != blank %}
+          <h1 class="landing-hero__heading">{{ section.settings.heading }}</h1>
+        {% endif %}
+
+        {% if section.settings.subtitle != blank %}
+          <div class="landing-hero__subtitle">{{ section.settings.subtitle }}</div>
+        {% endif %}
+
+        {% if section.settings.countdown_end != blank %}
+          <div class="landing-hero__countdown-wrapper">
+            <countdown-timer
+              data-countdown-end="{{ section.settings.countdown_end }}"
+              role="timer"
+              aria-live="polite"
+              aria-atomic="true"
+              aria-label="Time remaining for offer"
+            ></countdown-timer>
+          </div>
+        {% endif %}
+
+        <div class="landing-hero__colors">
+          {% for i in (1..5) %}
+            {% assign color_key = 'color_' | append: i %}
+            {% assign color_label_key = 'color_' | append: i | append: '_label' %}
+            {% if section.settings[color_key] != blank %}
+              <div
+                class="landing-hero__color-swatch"
+                style="background-color: {{ section.settings[color_key] }};"
+                title="{{ section.settings[color_label_key] }}"
+                aria-label="{{ section.settings[color_label_key] }}"
+              ></div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        {% if payment_icons.size > 0 %}
+          <div class="landing-hero__payment-icons">
+            {% for block in payment_icons %}
+              <div class="landing-hero__payment-icon" {{ block.shopify_attributes }}>
+                {% if block.settings.icon_image != blank %}
+                  {{ block.settings.icon_image | image_url: width: 60 | image_tag:
+                    alt: block.settings.icon_alt,
+                    loading: 'lazy',
+                    class: 'landing-hero__payment-icon-img'
+                  }}
+                {% else %}
+                  {{ 'image' | placeholder_svg_tag: 'landing-hero__payment-icon-placeholder' }}
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+      </div>
+
+      <div class="landing-hero__image-wrapper">
+        {% if section.settings.hero_image != blank %}
+          {{ section.settings.hero_image
+            | image_url: width: 1920
+            | image_tag:
+              widths: '375, 550, 750, 1100, 1500, 1920',
+              sizes: '(min-width: 750px) 50vw, 100vw',
+              alt: section.settings.hero_image.alt | default: section.settings.heading,
+              loading: 'eager',
+              class: 'landing-hero__image'
+          }}
+        {% else %}
+          {{ 'product-1' | placeholder_svg_tag: 'landing-hero__image-placeholder' }}
+        {% endif %}
+
+        {% if section.settings.badge_text != blank %}
+          <div class="landing-hero__badge landing-hero__badge--{{ section.settings.badge_position }}">
+            {{ section.settings.badge_text }}
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+
+    {% if trust_badges.size > 0 %}
+      <div class="landing-hero__trust-badges">
+        {% for block in trust_badges %}
+          <div class="landing-hero__trust-badge" {{ block.shopify_attributes }}>
+            {% if block.settings.badge_image != blank %}
+              {{ block.settings.badge_image | image_url: width: 160 | image_tag:
+                alt: block.settings.badge_text,
+                loading: 'lazy',
+                class: 'landing-hero__trust-badge-image'
+              }}
+            {% else %}
+              {{ 'image' | placeholder_svg_tag: 'landing-hero__trust-badge-placeholder' }}
+            {% endif %}
+            {% if block.settings.badge_text != blank %}
+              <p class="landing-hero__trust-badge-text">{{ block.settings.badge_text }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if feature_items.size > 0 %}
+      <div class="landing-hero__features">
+        {% for block in feature_items %}
+          <div class="landing-hero__feature-item" {{ block.shopify_attributes }}>
+            <span class="landing-hero__feature-icon">
+              {% render 'icon', icon: 'checkmark' %}
+            </span>
+            <div class="landing-hero__feature-text">{{ block.settings.text }}</div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="landing-hero__pricing">
+      {% if section.settings.original_price != blank %}
+        <span class="landing-hero__price-original">{{ section.settings.original_price }}</span>
+      {% endif %}
+      {% if section.settings.current_price != blank %}
+        <span class="landing-hero__price-current">{{ section.settings.current_price }}</span>
+      {% endif %}
+      {% if section.settings.button_label != blank %}
+        <a
+          href="{{ section.settings.button_link | default: '#' }}"
+          class="landing-hero__button button button--primary"
+        >
+          {{ section.settings.button_label }}
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="landing-hero__social-proof">
+      {% if section.settings.social_proof_text != blank %}
+        <div class="landing-hero__social-text">{{ section.settings.social_proof_text }}</div>
+      {% endif %}
+      {% if customer_images.size > 0 %}
+        <div class="landing-hero__customer-images">
+          {% for block in customer_images %}
+            <div class="landing-hero__customer-image-wrapper" {{ block.shopify_attributes }}>
+              {% if block.settings.image != blank %}
+                {{ block.settings.image | image_url: width: 200 | image_tag:
+                  alt: block.settings.alt_text | default: 'Customer review',
+                  loading: 'lazy',
+                  class: 'landing-hero__customer-image'
+                }}
+              {% else %}
+                {{ 'collection-1' | placeholder_svg_tag: 'landing-hero__customer-image-placeholder' }}
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+<script src="{{ 'countdown-timer.js' | asset_url }}" defer></script>
+
+{% stylesheet %}
+  .landing-hero {
+    overflow: hidden;
+  }
+
+  .landing-hero__container {
+    max-width: var(--page-width);
+    margin: 0 auto;
+    padding: 0 var(--page-gutter, 20px);
+  }
+
+  .landing-hero__main {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    align-items: center;
+    margin-bottom: 48px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-hero__main {
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+    }
+  }
+
+  .landing-hero__content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .landing-hero__heading {
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0;
+    color: rgb(var(--color-foreground-rgb));
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-hero__heading {
+      font-size: 4rem;
+    }
+  }
+
+  .landing-hero__subtitle {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: rgb(var(--color-foreground-rgb) / 0.85);
+  }
+
+  .landing-hero__image-wrapper {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+
+  .landing-hero__image,
+  .landing-hero__image-placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .landing-hero__badge {
+    position: absolute;
+    padding: 12px 24px;
+    background: rgb(var(--color-background-rgb));
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .landing-hero__badge--top-right {
+    top: 20px;
+    right: 20px;
+  }
+
+  .landing-hero__badge--top-left {
+    top: 20px;
+    left: 20px;
+  }
+
+  .landing-hero__countdown-wrapper {
+    margin: 8px 0;
+  }
+
+  .countdown-timer {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  @media screen and (min-width: 750px) {
+    .countdown-timer {
+      gap: 16px;
+    }
+  }
+
+  .countdown-timer__unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 16px;
+    background: rgb(var(--color-background-rgb));
+    border-radius: 8px;
+    border: 1px solid rgb(var(--color-border-rgb));
+    min-width: 70px;
+  }
+
+  .countdown-timer__value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1;
+    color: rgb(var(--color-foreground-rgb));
+  }
+
+  @media screen and (min-width: 750px) {
+    .countdown-timer__value {
+      font-size: 2rem;
+    }
+  }
+
+  .countdown-timer__label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgb(var(--color-foreground-rgb) / 0.7);
+    margin-top: 4px;
+  }
+
+  .countdown-timer--expired {
+    padding: 16px 24px;
+    background: rgb(var(--color-background-rgb));
+    border: 1px solid rgb(var(--color-border-rgb));
+    border-radius: 8px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .landing-hero__colors {
+    display: none;
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-hero__colors {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+  }
+
+  .landing-hero__color-swatch {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid rgb(var(--color-border-rgb));
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .landing-hero__color-swatch:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .landing-hero__payment-icons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .landing-hero__payment-icon {
+    flex-shrink: 0;
+  }
+
+  .landing-hero__payment-icon-img,
+  .landing-hero__payment-icon-placeholder {
+    width: auto;
+    height: 32px;
+    object-fit: contain;
+  }
+
+  .landing-hero__trust-badges {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    padding: 32px 0;
+    margin-bottom: 32px;
+    border-top: 1px solid rgb(var(--color-border-rgb));
+    border-bottom: 1px solid rgb(var(--color-border-rgb));
+  }
+
+  .landing-hero__trust-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 150px;
+  }
+
+  .landing-hero__trust-badge-image,
+  .landing-hero__trust-badge-placeholder {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 12px;
+  }
+
+  .landing-hero__trust-badge-text {
+    font-size: 0.875rem;
+    line-height: 1.4;
+    margin: 0;
+    color: rgb(var(--color-foreground-rgb) / 0.85);
+  }
+
+  .landing-hero__features {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-hero__features {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+  }
+
+  .landing-hero__feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .landing-hero__feature-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgb(var(--color-primary-rgb));
+  }
+
+  .landing-hero__feature-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .landing-hero__feature-text {
+    flex: 1;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: rgb(var(--color-foreground-rgb));
+  }
+
+  .landing-hero__pricing {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 40px 0;
+    text-align: center;
+  }
+
+  .landing-hero__price-original {
+    font-size: 1.25rem;
+    text-decoration: line-through;
+    color: rgb(var(--color-foreground-rgb) / 0.5);
+  }
+
+  .landing-hero__price-current {
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1;
+    color: rgb(var(--color-primary-rgb));
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-hero__price-current {
+      font-size: 4rem;
+    }
+  }
+
+  .landing-hero__button {
+    padding: 16px 48px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    display: inline-block;
+  }
+
+  .button--primary {
+    background: rgb(var(--color-button-rgb));
+    color: rgb(var(--color-button-text-rgb));
+    border: 2px solid rgb(var(--color-button-rgb));
+  }
+
+  .button--primary:hover {
+    background: rgb(var(--color-button-hover-rgb));
+    border-color: rgb(var(--color-button-hover-rgb));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .landing-hero__social-proof {
+    padding: 40px 0;
+    text-align: center;
+  }
+
+  .landing-hero__social-text {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: rgb(var(--color-foreground-rgb));
+  }
+
+  .landing-hero__customer-images {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 12px;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-hero__customer-images {
+      grid-template-columns: repeat(6, 1fr);
+      max-width: 700px;
+    }
+  }
+
+  .landing-hero__customer-image-wrapper {
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+
+  .landing-hero__customer-image,
+  .landing-hero__customer-image-placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .section--full-width .landing-hero__container {
+    max-width: 100%;
+  }
+
+  .section--page-width .landing-hero__container {
+    max-width: var(--page-width);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Landing Hero",
+  "tag": "section",
+  "class": "landing-hero-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "AWESOME!"
+    },
+    {
+      "type": "richtext",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "<p>Premium quality product with amazing features</p>"
+    },
+    {
+      "type": "header",
+      "content": "Countdown Timer"
+    },
+    {
+      "type": "text",
+      "id": "countdown_end",
+      "label": "End Date & Time",
+      "info": "Format: YYYY-MM-DD HH:MM:SS (e.g., 2025-12-31 23:59:59)",
+      "default": "2025-12-31 23:59:59"
+    },
+    {
+      "type": "header",
+      "content": "Hero Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Product Image"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Text",
+      "default": "OH HERO"
+    },
+    {
+      "type": "select",
+      "id": "badge_position",
+      "label": "Badge Position",
+      "options": [
+        {
+          "value": "top-right",
+          "label": "Top Right"
+        },
+        {
+          "value": "top-left",
+          "label": "Top Left"
+        }
+      ],
+      "default": "top-right"
+    },
+    {
+      "type": "header",
+      "content": "Color Swatches (Desktop Only)"
+    },
+    {
+      "type": "color",
+      "id": "color_1",
+      "label": "Color 1",
+      "default": "#FF0000"
+    },
+    {
+      "type": "text",
+      "id": "color_1_label",
+      "label": "Color 1 Label",
+      "default": "Red"
+    },
+    {
+      "type": "color",
+      "id": "color_2",
+      "label": "Color 2",
+      "default": "#0000FF"
+    },
+    {
+      "type": "text",
+      "id": "color_2_label",
+      "label": "Color 2 Label",
+      "default": "Blue"
+    },
+    {
+      "type": "color",
+      "id": "color_3",
+      "label": "Color 3",
+      "default": "#00FF00"
+    },
+    {
+      "type": "text",
+      "id": "color_3_label",
+      "label": "Color 3 Label",
+      "default": "Green"
+    },
+    {
+      "type": "color",
+      "id": "color_4",
+      "label": "Color 4",
+      "default": "#FFFF00"
+    },
+    {
+      "type": "text",
+      "id": "color_4_label",
+      "label": "Color 4 Label",
+      "default": "Yellow"
+    },
+    {
+      "type": "color",
+      "id": "color_5",
+      "label": "Color 5",
+      "default": "#FF00FF"
+    },
+    {
+      "type": "text",
+      "id": "color_5_label",
+      "label": "Color 5 Label",
+      "default": "Magenta"
+    },
+    {
+      "type": "header",
+      "content": "Pricing"
+    },
+    {
+      "type": "text",
+      "id": "original_price",
+      "label": "Original Price",
+      "default": "$99.99"
+    },
+    {
+      "type": "text",
+      "id": "current_price",
+      "label": "Current Price",
+      "default": "$49.99"
+    },
+    {
+      "type": "header",
+      "content": "Call to Action"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Text",
+      "default": "Add to Cart"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Social Proof"
+    },
+    {
+      "type": "text",
+      "id": "social_proof_text",
+      "label": "Social Proof Text",
+      "default": "Over 100,000 sold"
+    },
+    {
+      "type": "header",
+      "content": "Section Layout"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Section Width",
+      "options": [
+        {
+          "value": "page-width",
+          "label": "Page Width"
+        },
+        {
+          "value": "full-width",
+          "label": "Full Width"
+        }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top Padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom Padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "trust_badge",
+      "name": "Trust Badge",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "badge_image",
+          "label": "Badge Image"
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Badge Text",
+          "default": "Satisfaction Guaranteed"
+        }
+      ]
+    },
+    {
+      "type": "feature_item",
+      "name": "Feature Item",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Feature Text",
+          "default": "<p>Amazing feature description</p>"
+        }
+      ]
+    },
+    {
+      "type": "customer_image",
+      "name": "Customer Review Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Customer Image"
+        },
+        {
+          "type": "text",
+          "id": "alt_text",
+          "label": "Image Alt Text",
+          "default": "Happy customer"
+        }
+      ]
+    },
+    {
+      "type": "payment_icon",
+      "name": "Payment Method Icon",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Payment Icon"
+        },
+        {
+          "type": "text",
+          "id": "icon_alt",
+          "label": "Icon Alt Text",
+          "default": "Payment method"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Landing Hero",
+      "category": "Custom",
+      "blocks": [
+        {
+          "type": "trust_badge",
+          "settings": {
+            "badge_text": "90-day satisfaction guaranteed"
+          }
+        },
+        {
+          "type": "trust_badge",
+          "settings": {
+            "badge_text": "Lifetime satisfaction guaranteed"
+          }
+        },
+        {
+          "type": "feature_item",
+          "settings": {
+            "text": "<p>Premium quality materials</p>"
+          }
+        },
+        {
+          "type": "feature_item",
+          "settings": {
+            "text": "<p>Free shipping worldwide</p>"
+          }
+        },
+        {
+          "type": "feature_item",
+          "settings": {
+            "text": "<p>30-day money-back guarantee</p>"
+          }
+        },
+        {
+          "type": "feature_item",
+          "settings": {
+            "text": "<p>24/7 customer support</p>"
+          }
+        },
+        {
+          "type": "customer_image"
+        },
+        {
+          "type": "customer_image"
+        },
+        {
+          "type": "customer_image"
+        },
+        {
+          "type": "customer_image"
+        },
+        {
+          "type": "customer_image"
+        },
+        {
+          "type": "customer_image"
+        },
+        {
+          "type": "payment_icon"
+        },
+        {
+          "type": "payment_icon"
+        },
+        {
+          "type": "payment_icon"
+        },
+        {
+          "type": "payment_icon"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
