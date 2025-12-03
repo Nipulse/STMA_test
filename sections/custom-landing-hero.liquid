@@ -1,8 +1,7 @@
 {% liquid
-  assign trust_badges = section.blocks | where: 'type', 'trust_badge'
   assign feature_items = section.blocks | where: 'type', 'feature_item'
-  assign customer_images = section.blocks | where: 'type', 'customer_image'
-  assign payment_icons = section.blocks | where: 'type', 'payment_icon'
+  assign thumbnail_images = section.blocks | where: 'type', 'thumbnail_image'
+  assign trust_icons = section.blocks | where: 'type', 'trust_icon'
 %}
 
 <div
@@ -10,166 +9,177 @@
   style="{% render 'spacing-style', settings: section.settings %}"
   data-section-id="{{ section.id }}"
 >
-  <div class="landing-hero__container">
 
-    <div class="landing-hero__main">
+  <div class="landing-hero__hero-section">
+    {% if section.settings.background_image != blank %}
+      <div class="landing-hero__hero-bg">
+        {{ section.settings.background_image
+          | image_url: width: 2000
+          | image_tag:
+            widths: '750, 1100, 1500, 2000',
+            sizes: '100vw',
+            loading: 'eager',
+            class: 'landing-hero__hero-bg-img'
+        }}
+      </div>
+    {% endif %}
 
-      <div class="landing-hero__content">
+    <div class="landing-hero__hero-content">
+      {% if section.settings.heading != blank %}
+        <h1 class="landing-hero__heading">{{ section.settings.heading }}</h1>
+      {% endif %}
 
-        {% if section.settings.heading != blank %}
-          <h1 class="landing-hero__heading">{{ section.settings.heading }}</h1>
+      {% if section.settings.discount_text != blank %}
+        <div class="landing-hero__discount">{{ section.settings.discount_text }}</div>
+      {% endif %}
+
+      {% if section.settings.button_label != blank %}
+        <a href="{{ section.settings.button_link | default: '#' }}" class="landing-hero__button landing-hero__button--primary">
+          {{ section.settings.button_label }}
+        </a>
+      {% endif %}
+
+      {% if section.settings.paypal_button_label != blank %}
+        <a href="{{ section.settings.paypal_button_link | default: '#' }}" class="landing-hero__button landing-hero__button--paypal">
+          {{ section.settings.paypal_button_label }}
+        </a>
+      {% endif %}
+
+      {% if section.settings.afterpay_text != blank %}
+        <div class="landing-hero__afterpay">{{ section.settings.afterpay_text }}</div>
+      {% endif %}
+
+      {% if section.settings.countdown_text != blank %}
+        <div class="landing-hero__countdown-text">{{ section.settings.countdown_text }}</div>
+      {% endif %}
+
+      {% if section.settings.countdown_end != blank %}
+        <countdown-timer
+          data-countdown-end="{{ section.settings.countdown_end }}"
+          role="timer"
+          aria-live="polite"
+          aria-atomic="true"
+        ></countdown-timer>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="landing-hero__product-section">
+    <div class="landing-hero__product-grid">
+
+      <div class="landing-hero__features-column">
+        {% if section.settings.product_name != blank %}
+          <h2 class="landing-hero__product-name">{{ section.settings.product_name }}</h2>
         {% endif %}
 
-        {% if section.settings.subtitle != blank %}
-          <div class="landing-hero__subtitle">{{ section.settings.subtitle }}</div>
-        {% endif %}
-
-        {% if section.settings.countdown_end != blank %}
-          <div class="landing-hero__countdown-wrapper">
-            <countdown-timer
-              data-countdown-end="{{ section.settings.countdown_end }}"
-              role="timer"
-              aria-live="polite"
-              aria-atomic="true"
-              aria-label="Time remaining for offer"
-            ></countdown-timer>
+        {% if section.settings.badge_image != blank %}
+          <div class="landing-hero__badge-wrapper">
+            {{ section.settings.badge_image | image_url: width: 200 | image_tag: class: 'landing-hero__badge-img' }}
           </div>
         {% endif %}
 
-        <div class="landing-hero__colors">
-          {% for i in (1..5) %}
-            {% assign color_key = 'color_' | append: i %}
-            {% assign color_label_key = 'color_' | append: i | append: '_label' %}
-            {% if section.settings[color_key] != blank %}
-              <div
-                class="landing-hero__color-swatch"
-                style="background-color: {{ section.settings[color_key] }};"
-                title="{{ section.settings[color_label_key] }}"
-                aria-label="{{ section.settings[color_label_key] }}"
-              ></div>
-            {% endif %}
-          {% endfor %}
-        </div>
+        {% if section.settings.tagline != blank %}
+          <div class="landing-hero__tagline">{{ section.settings.tagline }}</div>
+        {% endif %}
 
-        {% if payment_icons.size > 0 %}
-          <div class="landing-hero__payment-icons">
-            {% for block in payment_icons %}
-              <div class="landing-hero__payment-icon" {{ block.shopify_attributes }}>
-                {% if block.settings.icon_image != blank %}
-                  {{ block.settings.icon_image | image_url: width: 60 | image_tag:
-                    alt: block.settings.icon_alt,
-                    loading: 'lazy',
-                    class: 'landing-hero__payment-icon-img'
-                  }}
+        {% if feature_items.size > 0 %}
+          <ul class="landing-hero__features-list">
+            {% for block in feature_items %}
+              <li class="landing-hero__feature" {{ block.shopify_attributes }}>
+                <span class="landing-hero__feature-icon">{% render 'icon', icon: 'checkmark' %}</span>
+                <span class="landing-hero__feature-text">{{ block.settings.text }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      <div class="landing-hero__image-column">
+        {% if section.settings.main_image != blank %}
+          {{ section.settings.main_image
+            | image_url: width: 1200
+            | image_tag:
+              widths: '550, 750, 1000, 1200',
+              sizes: '(min-width: 990px) 40vw, (min-width: 750px) 50vw, 100vw',
+              loading: 'eager',
+              class: 'landing-hero__main-image'
+          }}
+        {% else %}
+          {{ 'product-1' | placeholder_svg_tag: 'landing-hero__main-image-placeholder' }}
+        {% endif %}
+      </div>
+
+      <div class="landing-hero__thumbnails-column">
+        {% if thumbnail_images.size > 0 %}
+          <div class="landing-hero__thumbnails">
+            {% for block in thumbnail_images %}
+              <div class="landing-hero__thumbnail" {{ block.shopify_attributes }}>
+                {% if block.settings.image != blank %}
+                  {{ block.settings.image | image_url: width: 200 | image_tag: class: 'landing-hero__thumbnail-img' }}
                 {% else %}
-                  {{ 'image' | placeholder_svg_tag: 'landing-hero__payment-icon-placeholder' }}
+                  {{ 'product-1' | placeholder_svg_tag: 'landing-hero__thumbnail-placeholder' }}
                 {% endif %}
               </div>
             {% endfor %}
           </div>
         {% endif %}
-
-      </div>
-
-      <div class="landing-hero__image-wrapper">
-        {% if section.settings.hero_image != blank %}
-          {{ section.settings.hero_image
-            | image_url: width: 1920
-            | image_tag:
-              widths: '375, 550, 750, 1100, 1500, 1920',
-              sizes: '(min-width: 750px) 50vw, 100vw',
-              alt: section.settings.hero_image.alt | default: section.settings.heading,
-              loading: 'eager',
-              class: 'landing-hero__image'
-          }}
-        {% else %}
-          {{ 'product-1' | placeholder_svg_tag: 'landing-hero__image-placeholder' }}
-        {% endif %}
-
-        {% if section.settings.badge_text != blank %}
-          <div class="landing-hero__badge landing-hero__badge--{{ section.settings.badge_position }}">
-            {{ section.settings.badge_text }}
-          </div>
-        {% endif %}
       </div>
 
     </div>
-
-    {% if trust_badges.size > 0 %}
-      <div class="landing-hero__trust-badges">
-        {% for block in trust_badges %}
-          <div class="landing-hero__trust-badge" {{ block.shopify_attributes }}>
-            {% if block.settings.badge_image != blank %}
-              {{ block.settings.badge_image | image_url: width: 160 | image_tag:
-                alt: block.settings.badge_text,
-                loading: 'lazy',
-                class: 'landing-hero__trust-badge-image'
-              }}
-            {% else %}
-              {{ 'image' | placeholder_svg_tag: 'landing-hero__trust-badge-placeholder' }}
-            {% endif %}
-            {% if block.settings.badge_text != blank %}
-              <p class="landing-hero__trust-badge-text">{{ block.settings.badge_text }}</p>
-            {% endif %}
-          </div>
-        {% endfor %}
-      </div>
-    {% endif %}
-
-    {% if feature_items.size > 0 %}
-      <div class="landing-hero__features">
-        {% for block in feature_items %}
-          <div class="landing-hero__feature-item" {{ block.shopify_attributes }}>
-            <span class="landing-hero__feature-icon">
-              {% render 'icon', icon: 'checkmark' %}
-            </span>
-            <div class="landing-hero__feature-text">{{ block.settings.text }}</div>
-          </div>
-        {% endfor %}
-      </div>
-    {% endif %}
-
-    <div class="landing-hero__pricing">
-      {% if section.settings.original_price != blank %}
-        <span class="landing-hero__price-original">{{ section.settings.original_price }}</span>
-      {% endif %}
-      {% if section.settings.current_price != blank %}
-        <span class="landing-hero__price-current">{{ section.settings.current_price }}</span>
-      {% endif %}
-      {% if section.settings.button_label != blank %}
-        <a
-          href="{{ section.settings.button_link | default: '#' }}"
-          class="landing-hero__button button button--primary"
-        >
-          {{ section.settings.button_label }}
-        </a>
-      {% endif %}
-    </div>
-
-    <div class="landing-hero__social-proof">
-      {% if section.settings.social_proof_text != blank %}
-        <div class="landing-hero__social-text">{{ section.settings.social_proof_text }}</div>
-      {% endif %}
-      {% if customer_images.size > 0 %}
-        <div class="landing-hero__customer-images">
-          {% for block in customer_images %}
-            <div class="landing-hero__customer-image-wrapper" {{ block.shopify_attributes }}>
-              {% if block.settings.image != blank %}
-                {{ block.settings.image | image_url: width: 200 | image_tag:
-                  alt: block.settings.alt_text | default: 'Customer review',
-                  loading: 'lazy',
-                  class: 'landing-hero__customer-image'
-                }}
-              {% else %}
-                {{ 'collection-1' | placeholder_svg_tag: 'landing-hero__customer-image-placeholder' }}
-              {% endif %}
-            </div>
-          {% endfor %}
-        </div>
-      {% endif %}
-    </div>
-
   </div>
+
+  <div class="landing-hero__pricing-section">
+    <div class="landing-hero__pricing-grid">
+
+      <div class="landing-hero__price-column">
+        {% if section.settings.sale_text != blank %}
+          <div class="landing-hero__sale-text">{{ section.settings.sale_text }}</div>
+        {% endif %}
+
+        <div class="landing-hero__prices">
+          {% if section.settings.original_price != blank %}
+            <span class="landing-hero__price-original">{{ section.settings.original_price }}</span>
+          {% endif %}
+          {% if section.settings.current_price != blank %}
+            <span class="landing-hero__price-current">{{ section.settings.current_price }}</span>
+          {% endif %}
+        </div>
+
+        {% if section.settings.cta_button_label != blank %}
+          <a href="{{ section.settings.cta_button_link | default: '#' }}" class="landing-hero__button landing-hero__button--cta">
+            {{ section.settings.cta_button_label }}
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="landing-hero__trust-column">
+        {% if trust_icons.size > 0 %}
+          <div class="landing-hero__trust-icons">
+            {% for block in trust_icons %}
+              <div class="landing-hero__trust-item" {{ block.shopify_attributes }}>
+                {% if block.settings.icon != blank %}
+                  <span class="landing-hero__trust-icon-wrapper">
+                    {% render 'icon', icon: block.settings.icon %}
+                  </span>
+                {% endif %}
+                {% if block.settings.text != blank %}
+                  <span class="landing-hero__trust-text">{{ block.settings.text }}</span>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+
+  <div class="landing-hero__social-proof">
+    {% if section.settings.social_proof_text != blank %}
+      <h3 class="landing-hero__social-text">{{ section.settings.social_proof_text }}</h3>
+    {% endif %}
+  </div>
+
 </div>
 
 <script src="{{ 'countdown-timer.js' | asset_url }}" defer></script>
@@ -179,105 +189,135 @@
     overflow: hidden;
   }
 
-  .landing-hero__container {
-    max-width: var(--page-width);
-    margin: 0 auto;
-    padding: 0 var(--page-gutter, 20px);
-  }
-
-  .landing-hero__main {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 32px;
-    align-items: center;
-    margin-bottom: 48px;
+  .landing-hero__hero-section {
+    position: relative;
+    text-align: center;
+    padding: 80px 20px;
+    margin-bottom: 80px;
   }
 
   @media screen and (min-width: 750px) {
-    .landing-hero__main {
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
+    .landing-hero__hero-section {
+      padding: 100px 40px;
     }
   }
 
-  .landing-hero__content {
+  .landing-hero__hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+  }
+
+  .landing-hero__hero-bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.25;
+  }
+
+  .landing-hero__hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 540px;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 20px;
+    align-items: center;
   }
 
   .landing-hero__heading {
-    font-size: 3rem;
+    font-size: 2.5rem;
     font-weight: 700;
-    line-height: 1.1;
     margin: 0;
-    color: rgb(var(--color-foreground-rgb));
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.02em;
+    line-height: 1;
   }
 
   @media screen and (min-width: 750px) {
     .landing-hero__heading {
-      font-size: 4rem;
+      font-size: 3.5rem;
     }
   }
 
-  .landing-hero__subtitle {
-    font-size: 1.125rem;
-    line-height: 1.6;
-    color: rgb(var(--color-foreground-rgb) / 0.85);
+  .landing-hero__discount {
+    font-size: 1.0625rem;
+    line-height: 1.5;
+    color: #d97706;
   }
 
-  .landing-hero__image-wrapper {
-    position: relative;
-    aspect-ratio: 1;
-    overflow: hidden;
-    border-radius: 8px;
+  .landing-hero__discount strong,
+  .landing-hero__discount b {
+    color: #c2410c;
   }
 
-  .landing-hero__image,
-  .landing-hero__image-placeholder {
+  .landing-hero__button {
+    display: inline-block;
+    padding: 16px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.2s ease;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    max-width: 320px;
+    text-align: center;
+    border: none;
   }
 
-  .landing-hero__badge {
-    position: absolute;
-    padding: 12px 24px;
-    background: rgb(var(--color-background-rgb));
-    border-radius: 50px;
+  @media screen and (min-width: 750px) {
+    .landing-hero__button {
+      max-width: 340px;
+    }
+  }
+
+  .landing-hero__button--primary {
+    background: #c9a26a;
+    color: white;
+  }
+
+  .landing-hero__button--primary:hover {
+    background: #b8915a;
+  }
+
+  .landing-hero__button--paypal {
+    background: #ffc439;
+    color: #003087;
     font-weight: 700;
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
-  .landing-hero__badge--top-right {
-    top: 20px;
-    right: 20px;
+  .landing-hero__button--paypal:hover {
+    background: #f0b429;
   }
 
-  .landing-hero__badge--top-left {
-    top: 20px;
-    left: 20px;
+  .landing-hero__afterpay {
+    font-size: 0.8125rem;
+    color: rgb(var(--color-foreground-rgb) / 0.7);
+    line-height: 1.4;
   }
 
-  .landing-hero__countdown-wrapper {
-    margin: 8px 0;
+  .landing-hero__countdown-text {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin-top: 16px;
+    line-height: 1.3;
   }
 
   .countdown-timer {
     display: flex;
-    gap: 12px;
-    justify-content: flex-start;
+    gap: 10px;
+    justify-content: center;
     flex-wrap: wrap;
+    margin-top: 12px;
   }
 
   @media screen and (min-width: 750px) {
     .countdown-timer {
-      gap: 16px;
+      gap: 12px;
     }
   }
 
@@ -285,264 +325,420 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 12px 16px;
-    background: rgb(var(--color-background-rgb));
-    border-radius: 8px;
-    border: 1px solid rgb(var(--color-border-rgb));
-    min-width: 70px;
+    justify-content: center;
+    padding: 10px 14px;
+    background: #4a5568;
+    border-radius: 4px;
+    min-width: 65px;
+    color: white;
+  }
+
+  @media screen and (min-width: 750px) {
+    .countdown-timer__unit {
+      min-width: 70px;
+      padding: 12px 16px;
+    }
   }
 
   .countdown-timer__value {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: 700;
     line-height: 1;
-    color: rgb(var(--color-foreground-rgb));
   }
 
   @media screen and (min-width: 750px) {
     .countdown-timer__value {
-      font-size: 2rem;
+      font-size: 1.75rem;
     }
   }
 
   .countdown-timer__label {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: rgb(var(--color-foreground-rgb) / 0.7);
+    font-size: 0.6875rem;
+    text-transform: capitalize;
     margin-top: 4px;
+    opacity: 0.95;
+    line-height: 1;
   }
 
-  .countdown-timer--expired {
-    padding: 16px 24px;
-    background: rgb(var(--color-background-rgb));
-    border: 1px solid rgb(var(--color-border-rgb));
-    border-radius: 8px;
-    font-weight: 600;
-    text-align: center;
+  .landing-hero__product-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
   }
 
-  .landing-hero__colors {
-    display: none;
-  }
-
-  @media screen and (min-width: 750px) {
-    .landing-hero__colors {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
+  @media screen and (min-width: 990px) {
+    .landing-hero__product-section {
+      padding: 0 40px 80px;
     }
   }
 
-  .landing-hero__color-swatch {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 2px solid rgb(var(--color-border-rgb));
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-
-  .landing-hero__color-swatch:hover {
-    transform: scale(1.1);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  }
-
-  .landing-hero__payment-icons {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  .landing-hero__payment-icon {
-    flex-shrink: 0;
-  }
-
-  .landing-hero__payment-icon-img,
-  .landing-hero__payment-icon-placeholder {
-    width: auto;
-    height: 32px;
-    object-fit: contain;
-  }
-
-  .landing-hero__trust-badges {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 32px;
-    flex-wrap: wrap;
-    padding: 32px 0;
-    margin-bottom: 32px;
-    border-top: 1px solid rgb(var(--color-border-rgb));
-    border-bottom: 1px solid rgb(var(--color-border-rgb));
-  }
-
-  .landing-hero__trust-badge {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    max-width: 150px;
-  }
-
-  .landing-hero__trust-badge-image,
-  .landing-hero__trust-badge-placeholder {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 12px;
-  }
-
-  .landing-hero__trust-badge-text {
-    font-size: 0.875rem;
-    line-height: 1.4;
-    margin: 0;
-    color: rgb(var(--color-foreground-rgb) / 0.85);
-  }
-
-  .landing-hero__features {
+  .landing-hero__product-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 16px;
-    margin-bottom: 40px;
+    gap: 50px;
+    align-items: start;
   }
 
-  @media screen and (min-width: 750px) {
-    .landing-hero__features {
-      grid-template-columns: repeat(2, 1fr);
+  @media screen and (min-width: 990px) {
+    .landing-hero__product-grid {
+      grid-template-columns: 1fr 1.6fr 0.75fr;
+      gap: 50px;
+    }
+  }
+
+  .landing-hero__features-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+    text-align: center;
+  }
+
+  @media screen and (min-width: 990px) {
+    .landing-hero__features-column {
+      align-items: flex-start;
+      text-align: left;
       gap: 20px;
     }
   }
 
-  .landing-hero__feature-item {
+  .landing-hero__product-name {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: #c9a26a;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    line-height: 1;
+  }
+
+  @media screen and (min-width: 990px) {
+    .landing-hero__product-name {
+      font-size: 2.75rem;
+    }
+  }
+
+  .landing-hero__badge-wrapper {
+    width: 100px;
+    margin: 8px 0;
+  }
+
+  @media screen and (min-width: 990px) {
+    .landing-hero__badge-wrapper {
+      width: 120px;
+      margin: 0;
+    }
+  }
+
+  .landing-hero__badge-img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .landing-hero__tagline {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-top: 4px;
+  }
+
+  @media screen and (min-width: 990px) {
+    .landing-hero__tagline {
+      font-size: 1.0625rem;
+    }
+  }
+
+  .landing-hero__features-list {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    text-align: left;
+  }
+
+  @media screen and (min-width: 990px) {
+    .landing-hero__features-list {
+      margin-top: 16px;
+      gap: 16px;
+    }
+  }
+
+  .landing-hero__feature {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
+    gap: 10px;
   }
 
   .landing-hero__feature-icon {
     flex-shrink: 0;
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgb(var(--color-primary-rgb));
+    color: #22c55e;
+    margin-top: 2px;
   }
 
   .landing-hero__feature-icon svg {
-    width: 20px;
-    height: 20px;
+    width: 14px;
+    height: 14px;
   }
 
   .landing-hero__feature-text {
     flex: 1;
-    font-size: 1rem;
-    line-height: 1.5;
+    font-size: 0.9375rem;
+    line-height: 1.55;
     color: rgb(var(--color-foreground-rgb));
   }
 
-  .landing-hero__pricing {
+  @media screen and (min-width: 990px) {
+    .landing-hero__feature-text {
+      font-size: 0.9375rem;
+    }
+  }
+
+  .landing-hero__image-column {
+    display: none;
+  }
+
+  @media screen and (min-width: 990px) {
+    .landing-hero__image-column {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  .landing-hero__main-image,
+  .landing-hero__main-image-placeholder {
+    width: 100%;
+    height: auto;
+    max-width: 600px;
+  }
+
+  .landing-hero__thumbnails-column {
+    display: none;
+  }
+
+  @media screen and (min-width: 990px) {
+    .landing-hero__thumbnails-column {
+      display: block;
+    }
+  }
+
+  .landing-hero__thumbnails {
     display: flex;
     flex-direction: column;
+    gap: 10px;
+  }
+
+  .landing-hero__thumbnail {
+    border: 1px solid rgb(var(--color-border-rgb) / 0.3);
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: rgb(var(--color-background-rgb));
+  }
+
+  .landing-hero__thumbnail:hover {
+    border-color: #c9a26a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .landing-hero__thumbnail-img,
+  .landing-hero__thumbnail-placeholder {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+
+  .landing-hero__pricing-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 60px 20px;
+    border-top: 1px solid rgb(var(--color-border-rgb) / 0.2);
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-hero__pricing-section {
+      padding: 70px 40px;
+    }
+  }
+
+  .landing-hero__pricing-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 50px;
+    align-items: start;
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-hero__pricing-grid {
+      grid-template-columns: 1fr 1.2fr;
+      gap: 80px;
+    }
+  }
+
+  .landing-hero__price-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
     align-items: center;
-    gap: 16px;
-    padding: 40px 0;
     text-align: center;
   }
 
+  @media screen and (min-width: 750px) {
+    .landing-hero__price-column {
+      align-items: flex-start;
+      text-align: left;
+    }
+  }
+
+  .landing-hero__sale-text {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+  }
+
+  .landing-hero__prices {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
   .landing-hero__price-original {
-    font-size: 1.25rem;
+    font-size: 1.0625rem;
     text-decoration: line-through;
-    color: rgb(var(--color-foreground-rgb) / 0.5);
+    color: rgb(var(--color-foreground-rgb) / 0.45);
   }
 
   .landing-hero__price-current {
-    font-size: 3rem;
+    font-size: 3.25rem;
     font-weight: 700;
+    color: #c9a26a;
     line-height: 1;
-    color: rgb(var(--color-primary-rgb));
   }
 
   @media screen and (min-width: 750px) {
     .landing-hero__price-current {
-      font-size: 4rem;
+      font-size: 3.5rem;
     }
   }
 
-  .landing-hero__button {
+  .landing-hero__button--cta {
+    background: #c9a26a;
+    color: white;
+    border: none;
     padding: 16px 48px;
-    font-size: 1.125rem;
+    font-size: 1rem;
     font-weight: 600;
-    text-decoration: none;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-    cursor: pointer;
-    display: inline-block;
+    border-radius: 6px;
+    width: 100%;
+    max-width: 280px;
   }
 
-  .button--primary {
-    background: rgb(var(--color-button-rgb));
-    color: rgb(var(--color-button-text-rgb));
-    border: 2px solid rgb(var(--color-button-rgb));
+  @media screen and (min-width: 750px) {
+    .landing-hero__button--cta {
+      width: auto;
+      min-width: 220px;
+    }
   }
 
-  .button--primary:hover {
-    background: rgb(var(--color-button-hover-rgb));
-    border-color: rgb(var(--color-button-hover-rgb));
+  .landing-hero__button--cta:hover {
+    background: #b8915a;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
-  .landing-hero__social-proof {
-    padding: 40px 0;
-    text-align: center;
-  }
-
-  .landing-hero__social-text {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 24px;
-    color: rgb(var(--color-foreground-rgb));
-  }
-
-  .landing-hero__customer-images {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-    gap: 12px;
-    max-width: 100%;
-    margin: 0 auto;
+  .landing-hero__trust-column {
+    display: flex;
+    justify-content: center;
+    width: 100%;
   }
 
   @media screen and (min-width: 750px) {
-    .landing-hero__customer-images {
-      grid-template-columns: repeat(6, 1fr);
-      max-width: 700px;
+    .landing-hero__trust-column {
+      justify-content: flex-start;
     }
   }
 
-  .landing-hero__customer-image-wrapper {
-    aspect-ratio: 1;
-    overflow: hidden;
-    border-radius: 8px;
-  }
-
-  .landing-hero__customer-image,
-  .landing-hero__customer-image-placeholder {
+  .landing-hero__trust-icons {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    max-width: 400px;
   }
 
-  .section--full-width .landing-hero__container {
-    max-width: 100%;
+  @media screen and (min-width: 750px) {
+    .landing-hero__trust-icons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px 24px;
+      max-width: none;
+    }
   }
 
-  .section--page-width .landing-hero__container {
-    max-width: var(--page-width);
+  .landing-hero__trust-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+
+  .landing-hero__trust-icon-wrapper {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #c9a26a;
+  }
+
+  .landing-hero__trust-icon-wrapper svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .landing-hero__trust-text {
+    line-height: 1.45;
+    color: rgb(var(--color-foreground-rgb) / 0.9);
+  }
+
+  .landing-hero__social-proof {
+    text-align: center;
+    padding: 70px 20px;
+    border-top: 1px solid rgb(var(--color-border-rgb) / 0.2);
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-hero__social-proof {
+      padding: 80px 40px;
+    }
+  }
+
+  .landing-hero__social-text {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-hero__social-text {
+      font-size: 2.25rem;
+    }
   }
 {% endstylesheet %}
 
@@ -554,7 +750,12 @@
   "settings": [
     {
       "type": "header",
-      "content": "Hero Content"
+      "content": "Hero Section"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background Image"
     },
     {
       "type": "text",
@@ -563,147 +764,110 @@
       "default": "AWESOME!"
     },
     {
-      "type": "richtext",
-      "id": "subtitle",
-      "label": "Subtitle",
-      "default": "<p>Premium quality product with amazing features</p>"
+      "type": "text",
+      "id": "discount_text",
+      "label": "Discount Text",
+      "default": "Your discount of $67 off has been automatically applied."
     },
     {
-      "type": "header",
-      "content": "Countdown Timer"
+      "type": "text",
+      "id": "button_label",
+      "label": "Primary Button Text",
+      "default": "Order Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Primary Button Link"
+    },
+    {
+      "type": "text",
+      "id": "paypal_button_label",
+      "label": "PayPal Button Text",
+      "default": "Pay with PayPal"
+    },
+    {
+      "type": "url",
+      "id": "paypal_button_link",
+      "label": "PayPal Button Link"
+    },
+    {
+      "type": "text",
+      "id": "afterpay_text",
+      "label": "Afterpay Text",
+      "default": "or 4 interest-free payments of $37.50 with Afterpay"
+    },
+    {
+      "type": "text",
+      "id": "countdown_text",
+      "label": "Countdown Text",
+      "default": "Valentine's Day Sale Ends at 12PM Feb 14th 2025"
     },
     {
       "type": "text",
       "id": "countdown_end",
-      "label": "End Date & Time",
-      "info": "Format: YYYY-MM-DD HH:MM:SS (e.g., 2025-12-31 23:59:59)",
-      "default": "2025-12-31 23:59:59"
+      "label": "Countdown End Date",
+      "info": "Format: YYYY-MM-DD HH:MM:SS",
+      "default": "2025-02-14 12:00:00"
     },
     {
       "type": "header",
-      "content": "Hero Image"
+      "content": "Product Section"
+    },
+    {
+      "type": "text",
+      "id": "product_name",
+      "label": "Product Name",
+      "default": "SRI DRYQ"
     },
     {
       "type": "image_picker",
-      "id": "hero_image",
-      "label": "Product Image"
+      "id": "badge_image",
+      "label": "Badge Image"
     },
     {
-      "type": "text",
-      "id": "badge_text",
-      "label": "Badge Text",
-      "default": "OH HERO"
+      "type": "richtext",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "<p>Say <strong>goodbye to frizz</strong> with the <strong>advanced</strong> SRI DryQ</p>"
     },
     {
-      "type": "select",
-      "id": "badge_position",
-      "label": "Badge Position",
-      "options": [
-        {
-          "value": "top-right",
-          "label": "Top Right"
-        },
-        {
-          "value": "top-left",
-          "label": "Top Left"
-        }
-      ],
-      "default": "top-right"
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Main Product Image"
     },
     {
       "type": "header",
-      "content": "Color Swatches (Desktop Only)"
-    },
-    {
-      "type": "color",
-      "id": "color_1",
-      "label": "Color 1",
-      "default": "#FF0000"
+      "content": "Pricing Section"
     },
     {
       "type": "text",
-      "id": "color_1_label",
-      "label": "Color 1 Label",
-      "default": "Red"
-    },
-    {
-      "type": "color",
-      "id": "color_2",
-      "label": "Color 2",
-      "default": "#0000FF"
-    },
-    {
-      "type": "text",
-      "id": "color_2_label",
-      "label": "Color 2 Label",
-      "default": "Blue"
-    },
-    {
-      "type": "color",
-      "id": "color_3",
-      "label": "Color 3",
-      "default": "#00FF00"
-    },
-    {
-      "type": "text",
-      "id": "color_3_label",
-      "label": "Color 3 Label",
-      "default": "Green"
-    },
-    {
-      "type": "color",
-      "id": "color_4",
-      "label": "Color 4",
-      "default": "#FFFF00"
-    },
-    {
-      "type": "text",
-      "id": "color_4_label",
-      "label": "Color 4 Label",
-      "default": "Yellow"
-    },
-    {
-      "type": "color",
-      "id": "color_5",
-      "label": "Color 5",
-      "default": "#FF00FF"
-    },
-    {
-      "type": "text",
-      "id": "color_5_label",
-      "label": "Color 5 Label",
-      "default": "Magenta"
-    },
-    {
-      "type": "header",
-      "content": "Pricing"
+      "id": "sale_text",
+      "label": "Sale Text",
+      "default": "Limited Time VALENTINE'S DAY sale"
     },
     {
       "type": "text",
       "id": "original_price",
       "label": "Original Price",
-      "default": "$99.99"
+      "default": "$299.99"
     },
     {
       "type": "text",
       "id": "current_price",
       "label": "Current Price",
-      "default": "$49.99"
-    },
-    {
-      "type": "header",
-      "content": "Call to Action"
+      "default": "$232.99"
     },
     {
       "type": "text",
-      "id": "button_label",
-      "label": "Button Text",
-      "default": "Add to Cart"
+      "id": "cta_button_label",
+      "label": "CTA Button Text",
+      "default": "Order Now"
     },
     {
       "type": "url",
-      "id": "button_link",
-      "label": "Button Link"
+      "id": "cta_button_link",
+      "label": "CTA Button Link"
     },
     {
       "type": "header",
@@ -717,12 +881,12 @@
     },
     {
       "type": "header",
-      "content": "Section Layout"
+      "content": "Section Settings"
     },
     {
       "type": "select",
       "id": "section_width",
-      "label": "Section Width",
+      "label": "Width",
       "options": [
         {
           "value": "page-width",
@@ -740,10 +904,6 @@
       "id": "color_scheme",
       "label": "Color Scheme",
       "default": "scheme-1"
-    },
-    {
-      "type": "header",
-      "content": "Spacing"
     },
     {
       "type": "range",
@@ -768,65 +928,48 @@
   ],
   "blocks": [
     {
-      "type": "trust_badge",
-      "name": "Trust Badge",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "badge_image",
-          "label": "Badge Image"
-        },
-        {
-          "type": "text",
-          "id": "badge_text",
-          "label": "Badge Text",
-          "default": "Satisfaction Guaranteed"
-        }
-      ]
-    },
-    {
       "type": "feature_item",
       "name": "Feature Item",
       "settings": [
         {
-          "type": "richtext",
+          "type": "text",
           "id": "text",
           "label": "Feature Text",
-          "default": "<p>Amazing feature description</p>"
+          "default": "Amazing feature"
         }
       ]
     },
     {
-      "type": "customer_image",
-      "name": "Customer Review Image",
+      "type": "thumbnail_image",
+      "name": "Thumbnail Image",
       "settings": [
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Customer Image"
-        },
-        {
-          "type": "text",
-          "id": "alt_text",
-          "label": "Image Alt Text",
-          "default": "Happy customer"
+          "label": "Thumbnail Image"
         }
       ]
     },
     {
-      "type": "payment_icon",
-      "name": "Payment Method Icon",
+      "type": "trust_icon",
+      "name": "Trust Icon",
       "settings": [
         {
-          "type": "image_picker",
-          "id": "icon_image",
-          "label": "Payment Icon"
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            {"value": "checkmark", "label": "Checkmark"},
+            {"value": "orders", "label": "Orders"},
+            {"value": "discount", "label": "Discount"}
+          ],
+          "default": "checkmark"
         },
         {
           "type": "text",
-          "id": "icon_alt",
-          "label": "Icon Alt Text",
-          "default": "Payment method"
+          "id": "text",
+          "label": "Text",
+          "default": "Trust item"
         }
       ]
     }
@@ -837,70 +980,93 @@
       "category": "Custom",
       "blocks": [
         {
-          "type": "trust_badge",
+          "type": "feature_item",
           "settings": {
-            "badge_text": "90-day satisfaction guaranteed"
-          }
-        },
-        {
-          "type": "trust_badge",
-          "settings": {
-            "badge_text": "Lifetime satisfaction guaranteed"
+            "text": "Intelligent heat control dries hair faster with optimal airflow speeds"
           }
         },
         {
           "type": "feature_item",
           "settings": {
-            "text": "<p>Premium quality materials</p>"
+            "text": "Negative ions to support frizz-free styling"
           }
         },
         {
           "type": "feature_item",
           "settings": {
-            "text": "<p>Free shipping worldwide</p>"
+            "text": "Infrared light therapy strengthens weak, brittle hair and stimulates growth"
           }
         },
         {
           "type": "feature_item",
           "settings": {
-            "text": "<p>30-day money-back guarantee</p>"
+            "text": "Features 4 modes, 3 speed settings, and a memory function"
           }
         },
         {
           "type": "feature_item",
           "settings": {
-            "text": "<p>24/7 customer support</p>"
+            "text": "Lightweight, compact, and quiet, making it easy to take anywhere"
           }
         },
         {
-          "type": "customer_image"
+          "type": "feature_item",
+          "settings": {
+            "text": "Easy-snap magnetic attachments"
+          }
         },
         {
-          "type": "customer_image"
+          "type": "thumbnail_image"
         },
         {
-          "type": "customer_image"
+          "type": "thumbnail_image"
         },
         {
-          "type": "customer_image"
+          "type": "thumbnail_image"
         },
         {
-          "type": "customer_image"
+          "type": "thumbnail_image"
         },
         {
-          "type": "customer_image"
+          "type": "thumbnail_image"
         },
         {
-          "type": "payment_icon"
+          "type": "thumbnail_image"
         },
         {
-          "type": "payment_icon"
+          "type": "trust_icon",
+          "settings": {
+            "icon": "orders",
+            "text": "Fulfilled by Amazon"
+          }
         },
         {
-          "type": "payment_icon"
+          "type": "trust_icon",
+          "settings": {
+            "icon": "discount",
+            "text": "Try it for 60 days—money-back guarantee"
+          }
         },
         {
-          "type": "payment_icon"
+          "type": "trust_icon",
+          "settings": {
+            "icon": "checkmark",
+            "text": "1-year Warranty"
+          }
+        },
+        {
+          "type": "trust_icon",
+          "settings": {
+            "icon": "checkmark",
+            "text": "Free Shipping"
+          }
+        },
+        {
+          "type": "trust_icon",
+          "settings": {
+            "icon": "checkmark",
+            "text": "Secure Checkout"
+          }
         }
       ]
     }
