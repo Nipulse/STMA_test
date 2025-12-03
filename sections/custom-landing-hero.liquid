@@ -40,13 +40,14 @@
 
       {% if section.settings.paypal_button_label != blank %}
         <a href="{{ section.settings.paypal_button_link | default: '#' }}" class="landing-hero__button landing-hero__button--paypal">
-          {{ section.settings.paypal_button_label }}
+          <img src="{{ 'paypal-logo.png' | asset_url }}" alt="PayPal" class="landing-hero__paypal-logo">
+          <span>{{ section.settings.paypal_button_label }}</span>
         </a>
       {% endif %}
 
       {% if section.settings.afterpay_text != blank %}
         <div class="landing-hero__afterpay">
-          {{ section.settings.afterpay_text }}
+          <span class="landing-hero__afterpay-text">{{ section.settings.afterpay_text }}</span>
           <img src="{{ 'afterpay-logo.png' | asset_url }}" alt="Afterpay" class="landing-hero__afterpay-logo">
         </div>
       {% endif %}
@@ -140,7 +141,7 @@
 
       <div class="landing-hero__price-column">
         {% if section.settings.sale_text != blank %}
-          <div class="landing-hero__sale-text">{{ section.settings.sale_text | newline_to_br }}</div>
+          <div class="landing-hero__sale-text">{{ section.settings.sale_text }}</div>
         {% endif %}
 
         <div class="landing-hero__prices">
@@ -250,7 +251,7 @@
   }
 
   .landing-hero__heading {
-    font-size: 2.5rem;
+    font-size: 2.75rem;
     font-weight: 700;
     margin: 0;
     text-transform: uppercase;
@@ -260,14 +261,20 @@
 
   @media screen and (min-width: 750px) {
     .landing-hero__heading {
-      font-size: 3.5rem;
+      font-size: 5rem;
     }
   }
 
   .landing-hero__discount {
-    font-size: 1.0625rem;
+    font-size: 0.9375rem;
     line-height: 1.5;
     color: rgb(var(--color-foreground-rgb));
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-hero__discount {
+      font-size: 1rem;
+    }
   }
 
   .landing-hero__discount em,
@@ -310,20 +317,51 @@
     background: #ffc439;
     color: #003087;
     font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
 
   .landing-hero__button--paypal:hover {
     background: #f0b429;
   }
 
+  .landing-hero__paypal-logo {
+    height: 20px;
+    width: auto;
+    display: block;
+  }
+
   .landing-hero__afterpay {
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     color: rgb(var(--color-foreground-rgb) / 0.7);
     line-height: 1.4;
     display: flex;
+    flex-direction: column;
     align-items: center;
     gap: 6px;
     justify-content: center;
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-hero__afterpay {
+      font-size: 0.8125rem;
+    }
+  }
+
+  .landing-hero__afterpay-text {
+    font-weight: 700;
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-hero__afterpay {
+      flex-direction: row;
+    }
+
+    .landing-hero__afterpay-text {
+      font-weight: 400;
+    }
   }
 
   .landing-hero__afterpay-logo {
@@ -464,7 +502,7 @@
   }
 
   .landing-hero__product-name {
-    font-size: 2.25rem;
+    font-size: 2.5rem;
     font-weight: 700;
     color: #c9a26a;
     margin: 0;
@@ -476,7 +514,7 @@
 
   @media screen and (min-width: 990px) {
     .landing-hero__product-name {
-      font-size: 2.75rem;
+      font-size: 4rem;
       text-align: left;
     }
   }
@@ -628,11 +666,21 @@
   }
 
   .landing-hero__sale-text {
-    font-size: 0.9375rem;
+    font-size: 1rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.02em;
     line-height: 1.3;
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-hero__sale-text {
+      font-size: 1.125rem;
+    }
+  }
+
+  .landing-hero__sale-text strong {
+    font-weight: 800;
   }
 
   .landing-hero__prices {
@@ -648,7 +696,7 @@
   }
 
   .landing-hero__price-current {
-    font-size: 3.25rem;
+    font-size: 3rem;
     font-weight: 700;
     color: #c9a26a;
     line-height: 1;
@@ -656,7 +704,7 @@
 
   @media screen and (min-width: 750px) {
     .landing-hero__price-current {
-      font-size: 3.5rem;
+      font-size: 4.5rem;
     }
   }
 
@@ -873,10 +921,10 @@
       "content": "Pricing Section"
     },
     {
-      "type": "text",
+      "type": "inline_richtext",
       "id": "sale_text",
       "label": "Sale Text",
-      "default": "Limited Time\nVALENTINE'S DAY sale"
+      "default": "Limited Time <strong>VALENTINE'S DAY</strong> sale"
     },
     {
       "type": "text",
